@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<title>CPS测试</title>
+	</head>
+	<style>
+		#cps-test {
+			text-align: center;
+			position: fixed;
+			width: 150px;
+			height: 50px;
+			top: 0px;
+			left: calc(50% - 75px);
+		}
+
+		#button-click {
+			position: fixed;
+			bottom: 0px;
+			left: 0px;
+			width: 100%;
+			height: 60%;
+			font-size: 20px;
+		}
+
+		#number {
+			position: fixed;
+			bottom: calc(60% + 20px);
+			width: 100px;
+			height: 20px;
+			text-align: center;
+			left: calc(50% - 50px);
+		}
+
+		#time {
+			position: fixed;
+			bottom: calc(60% + 50px);
+			width: 200px;
+			height: 20px;
+			text-align: center;
+			left: calc(50% - 100px);
+		}
+
+		#by {
+			position: fixed;
+			width: 100px;
+			height: 20px;
+			bottom: 10px;
+			text-align: end;
+			right: 5px;
+		}
+		
+		#log {
+			position: fixed;
+			width: calc(100% - 28px);
+			left: auto;
+			top: 65px;
+			height: calc(40% - 150px);
+			resize: none;
+		}
+	</style>
+	<body>
+		<h1 id="cps-test">CPS测试</h1>
+		<textarea id="log" readonly></textarea>
+		<button id="button-click">点击开始</button>
+		<span id="number">点击次数:0</span>
+		<span id="time">剩余时间:10.00s</span>
+		<span id="by">by: bytfr</span>
+	</body>
+	<script>
+		class Log{
+			constructor(){
+				this.log = document.getElementById("log");
+			}
+			getTime(){
+				var time = new Date;
+				var second = time.getSeconds();
+				if(second<10){
+					second = "0"+second;
+				}
+				var time = time.getHours()+":"+time.getMinutes()+":"+second;
+				return time;
+			}
+			info(msg){
+				var message = this.getTime()+" [INFO] " + msg;
+				console.log(message);
+				this.log.innerHTML+=message+"\n";
+			}
+		}
+		log = new Log();
+		log.info("网页加载")
+		click_num = 0;
+		click_number = document.getElementById("number")
+		function click(){
+			click_num+=1;
+			click_number.innerHTML = "点击次数:"+String(click_num);
+		}
+		function start(){
+			log.info("测试开始");
+			// 倒计时开始
+			click_num = 0;
+			document.getElementById("button-click").onclick = click;
+			document.getElementById("button-click").innerHTML = "Click!"
+			now = Date.now();
+			time_span = document.getElementById('time');
+			// 倒计时循环
+			xh = setInterval(() => {
+				// 计算剩余时间
+				const timeRemaining = 10000 - (Date.now()-now);
+				time_span.innerHTML='剩余时间: '+String((timeRemaining/1000).toFixed(2))+'s'
+				if(timeRemaining <= 0){
+					clearInterval(xh);
+					time_span.innerHTML='剩余时间: 0.00s'
+					document.getElementById("button-click").onclick = start;
+					document.getElementById("button-click").innerHTML = "点击重新开始";
+					log.info("测试完成，您的CPS是 "+String((click_num/10).toFixed(1))+"次/秒");
+				}
+			}, 50);
+		}
+		document.getElementById("button-click").onclick = start;
+		
+	</script>
+</html>
