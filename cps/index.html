@@ -115,6 +115,7 @@
 					document.getElementById("button-click").onclick = start;
 					document.getElementById("button-click").innerHTML = "点击重新开始";
 					log.info("测试完成，您的CPS是 "+String((click_num/10).toFixed(1))+"次/秒");
+					window.alert("测试完成，您的CPS是 "+String((click_num/10).toFixed(1))+"次/秒");
 				}
 			}, 50);
 		}
